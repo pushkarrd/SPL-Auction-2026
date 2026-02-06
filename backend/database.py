@@ -12,7 +12,14 @@ db = None
 
 async def connect_db():
     global client, db
-    client = AsyncIOMotorClient(MONGODB_URL)
+    # Add SSL/TLS settings for cloud MongoDB
+    client = AsyncIOMotorClient(
+        MONGODB_URL,
+        tls=True,
+        tlsAllowInvalidCertificates=True,
+        serverSelectionTimeoutMS=30000,
+        connectTimeoutMS=30000
+    )
     db = client[DATABASE_NAME]
     print(f"Connected to MongoDB: {DATABASE_NAME}")
     return db
