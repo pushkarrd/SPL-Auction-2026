@@ -217,7 +217,6 @@
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
-  margin-left: auto;
 }
 
 .bid-form {
@@ -690,5 +689,122 @@ tfoot td {
   
   .team-name-large {
     font-size: 1.75rem;
+  }
+}
+
+/* Retention Form Styles */
+.add-retention-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.add-retention-form {
+  background: var(--bg-card);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+}
+
+.retention-form-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.retention-form-row .input-field {
+  flex: 1;
+  min-width: 120px;
+}
+
+.retention-form-row .amount-input-group {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 150px;
+}
+
+.retention-form-row .amount-input {
+  flex: 1;
+}
+
+.retention-form-row .unit-select {
+  width: 90px;
+}
+
+.retention-form-row .btn {
+  white-space: nowrap;
+}
+
+/* Edit styles for retention */
+.edit-amount-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.edit-input.amount-edit {
+  width: 80px;
+}
+
+.edit-unit-select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.35rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.actions-cell {
+  white-space: nowrap;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn-edit {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-edit:hover {
+  background: #f59e0b;
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.btn-secondary {
+  background: #64748b;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #475569;
+}
+
+@media (max-width: 600px) {
+  .retention-form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .retention-form-row .input-field,
+  .retention-form-row .amount-input-group {
+    width: 100%;
   }
 }

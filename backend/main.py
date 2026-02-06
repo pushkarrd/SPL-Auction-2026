@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from database import connect_db, close_db, get_db
 from models import (
     Team, TeamResponse, BidCreate, BidResponse, 
-    Retention, Bid, ErrorResponse
+    Retention, Bid, ErrorResponse, RetentionUpdate, RetentionResponse, RetentionCreate
 )
 from initial_data import TEAMS_DATA, RETENTIONS_DATA, RETENTION_TOTALS
 
@@ -298,6 +298,150 @@ async def update_bid(bid_id: str, bid_data: BidUpdate):
         "message": f"Bid updated successfully",
         "remaining_purse": new_remaining_purse
     }
+
+# ============== RETENTION ENDPOINTS ==============
+
+@app.post("/api/retentions", response_model=RetentionResponse)
+async def add_retention(retention_data: RetentionCreate):
+    """Add a new retention player"""
+    from bson import ObjectId
+    db = get_db()
+    
+    team_code = retention_data.team_code.upper()
+    player_name = retention_data.player_name.strip()
+    amount = retention_data.amount
+    
+    # Validation
+    if not player_name:
+        raise HTTPException(status_code=400, detail="Player name cannot be empty")
+    
+    if amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be a positive number")
+    
+    # Get team
+    team = await db.teams.find_one({"team_code": team_code})
+    if not team:
+        raise HTTPException(status_code=404, detail=f"Team {team_code} not found")
+    
+    # Check if amount exceeds remaining purse
+    if amount > team["remaining_purse"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient purse! Amount ({amount} Cr) exceeds remaining purse ({team['remaining_purse']} Cr)"
+        )
+    
+    # Check if player already exists as retention
+    existing = await db.retentions.find_one({
+        "team_code": team_code,
+        "player_name": {"$regex": f"^{player_name}$", "$options": "i"}
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail=f"{player_name} is already a retention player")
+    
+    # Create retention
+    new_retention = {
+        "team_code": team_code,
+        "player_name": player_name,
+        "amount": amount
+    }
+    
+    result = await db.retentions.insert_one(new_retention)
+    
+    # Update team's remaining purse
+    new_remaining_purse = team["remaining_purse"] - amount
+    await db.teams.update_one(
+        {"team_code": team_code},
+        {"$set": {"remaining_purse": new_remaining_purse}}
+    )
+    
+    new_retention["id"] = str(result.inserted_id)
+    
+    return RetentionResponse(
+        success=True,
+        message=f"Successfully added {player_name} as retention for {amount} Cr",
+        retention=Retention(**new_retention),
+        remaining_purse=new_remaining_purse
+    )
+
+@app.put("/api/retentions/{retention_id}")
+async def update_retention(retention_id: str, retention_data: RetentionUpdate):
+    """Update an existing retention player"""
+    from bson import ObjectId
+    db = get_db()
+    
+    new_player_name = retention_data.player_name.strip()
+    new_amount = retention_data.amount
+    
+    # Validation
+    if not new_player_name:
+        raise HTTPException(status_code=400, detail="Player name cannot be empty")
+    
+    if new_amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be a positive number")
+    
+    # Find existing retention
+    existing = await db.retentions.find_one({"_id": ObjectId(retention_id)})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Retention not found")
+    
+    team_code = existing["team_code"]
+    old_amount = existing["amount"]
+    
+    # Get team
+    team = await db.teams.find_one({"team_code": team_code})
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+    
+    # Calculate purse difference
+    amount_diff = new_amount - old_amount
+    
+    # Check if new amount is valid
+    if amount_diff > team["remaining_purse"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient purse! Additional amount ({amount_diff} Cr) exceeds remaining purse ({team['remaining_purse']} Cr)"
+        )
+    
+    # Update retention
+    await db.retentions.update_one(
+        {"_id": ObjectId(retention_id)},
+        {"$set": {"player_name": new_player_name, "amount": new_amount}}
+    )
+    
+    # Update team purse
+    new_remaining_purse = team["remaining_purse"] - amount_diff
+    await db.teams.update_one(
+        {"team_code": team_code},
+        {"$set": {"remaining_purse": new_remaining_purse}}
+    )
+    
+    return {
+        "success": True,
+        "message": "Retention updated successfully",
+        "remaining_purse": new_remaining_purse
+    }
+
+@app.delete("/api/retentions/{retention_id}")
+async def delete_retention(retention_id: str):
+    """Delete a retention and restore purse"""
+    from bson import ObjectId
+    db = get_db()
+    
+    # Find the retention
+    retention = await db.retentions.find_one({"_id": ObjectId(retention_id)})
+    if not retention:
+        raise HTTPException(status_code=404, detail="Retention not found")
+    
+    # Restore purse
+    await db.teams.update_one(
+        {"team_code": retention["team_code"]},
+        {"$inc": {"remaining_purse": retention["amount"]}}
+    )
+    
+    # Delete retention
+    await db.retentions.delete_one({"_id": ObjectId(retention_id)})
+    
+    return {"success": True, "message": "Retention deleted and purse restored"}
 
 @app.post("/api/reset")
 async def reset_database():

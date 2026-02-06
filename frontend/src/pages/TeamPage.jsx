@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getTeamDetails, addBid, deleteBid, updateBid } from '../services/api';
+import { getTeamDetails, addBid, deleteBid, updateBid, addRetention, updateRetention, deleteRetention } from '../services/api';
 import { toast } from 'react-toastify';
 import { 
   FaArrowLeft, FaUserTie, FaWallet, FaPlus, FaTrash, 
@@ -48,6 +48,18 @@ function TeamPage() {
   const [editBidAmount, setEditBidAmount] = useState('');
   const [editPlayerRole, setEditPlayerRole] = useState('Batsman');
   const [editAmountUnit, setEditAmountUnit] = useState('cr');
+
+  // Retention edit state
+  const [editingRetention, setEditingRetention] = useState(null);
+  const [editRetentionName, setEditRetentionName] = useState('');
+  const [editRetentionAmount, setEditRetentionAmount] = useState('');
+  const [editRetentionUnit, setEditRetentionUnit] = useState('cr');
+
+  // Add retention state
+  const [showAddRetention, setShowAddRetention] = useState(false);
+  const [newRetentionName, setNewRetentionName] = useState('');
+  const [newRetentionAmount, setNewRetentionAmount] = useState('');
+  const [newRetentionUnit, setNewRetentionUnit] = useState('cr');
 
   const colors = teamColors[teamCode?.toUpperCase()] || teamColors.VK;
   const logo = teamLogos[teamCode?.toUpperCase()] || '🏏';
@@ -180,6 +192,113 @@ function TeamPage() {
       toast.error(error.response?.data?.detail || 'Failed to update bid');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  // Retention handlers
+  const handleAddRetention = async (e) => {
+    e.preventDefault();
+    
+    if (!newRetentionName.trim()) {
+      toast.error('Please enter player name');
+      return;
+    }
+    
+    const inputAmount = parseFloat(newRetentionAmount);
+    if (isNaN(inputAmount) || inputAmount <= 0) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
+    
+    const unitConfig = AMOUNT_UNITS.find(u => u.value === newRetentionUnit);
+    const amountInCr = inputAmount * unitConfig.multiplier;
+    
+    if (amountInCr > team.remaining_purse) {
+      toast.error(`Insufficient purse! Only ${team.remaining_purse.toFixed(2)} Cr available`);
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      const result = await addRetention({
+        team_code: teamCode.toUpperCase(),
+        player_name: newRetentionName.trim(),
+        amount: amountInCr
+      });
+      
+      toast.success(result.message);
+      setNewRetentionName('');
+      setNewRetentionAmount('');
+      setNewRetentionUnit('cr');
+      setShowAddRetention(false);
+      fetchTeamData();
+    } catch (error) {
+      console.error('Error adding retention:', error);
+      toast.error(error.response?.data?.detail || 'Failed to add retention');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleEditRetentionClick = (retention) => {
+    setEditingRetention(retention.id);
+    setEditRetentionName(retention.player_name);
+    setEditRetentionAmount(retention.amount.toString());
+    setEditRetentionUnit('cr');
+  };
+
+  const handleCancelRetentionEdit = () => {
+    setEditingRetention(null);
+    setEditRetentionName('');
+    setEditRetentionAmount('');
+    setEditRetentionUnit('cr');
+  };
+
+  const handleSaveRetentionEdit = async (retentionId) => {
+    if (!editRetentionName.trim()) {
+      toast.error('Player name cannot be empty');
+      return;
+    }
+
+    const inputAmount = parseFloat(editRetentionAmount);
+    if (isNaN(inputAmount) || inputAmount <= 0) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
+
+    const unitConfig = AMOUNT_UNITS.find(u => u.value === editRetentionUnit);
+    const amountInCr = inputAmount * unitConfig.multiplier;
+
+    try {
+      setSubmitting(true);
+      await updateRetention(retentionId, {
+        player_name: editRetentionName.trim(),
+        amount: amountInCr
+      });
+      toast.success('Retention updated successfully!');
+      setEditingRetention(null);
+      setEditRetentionUnit('cr');
+      fetchTeamData();
+    } catch (error) {
+      console.error('Error updating retention:', error);
+      toast.error(error.response?.data?.detail || 'Failed to update retention');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteRetention = async (retentionId, playerName, amount) => {
+    if (!window.confirm(`Delete retention for ${playerName} (${amount} Cr)?`)) {
+      return;
+    }
+
+    try {
+      await deleteRetention(retentionId);
+      toast.success(`Retention for ${playerName} deleted. Purse restored!`);
+      fetchTeamData();
+    } catch (error) {
+      console.error('Error deleting retention:', error);
+      toast.error('Failed to delete retention');
     }
   };
 
@@ -373,7 +492,52 @@ function TeamPage() {
               <FaLock />
               <h2>Retention Players</h2>
               <span className="count-badge">{team.retentions.length}</span>
+              <button 
+                className="btn btn-sm btn-accent add-retention-btn"
+                onClick={() => setShowAddRetention(!showAddRetention)}
+              >
+                {showAddRetention ? <FaTimes /> : <FaPlus />}
+                {showAddRetention ? 'Cancel' : 'Add'}
+              </button>
             </div>
+
+            {/* Add Retention Form */}
+            {showAddRetention && (
+              <form className="add-retention-form" onSubmit={handleAddRetention}>
+                <div className="retention-form-row">
+                  <input
+                    type="text"
+                    placeholder="Player Name"
+                    value={newRetentionName}
+                    onChange={(e) => setNewRetentionName(e.target.value)}
+                    className="input-field"
+                  />
+                  <div className="amount-input-group">
+                    <input
+                      type="number"
+                      placeholder="Amount"
+                      value={newRetentionAmount}
+                      onChange={(e) => setNewRetentionAmount(e.target.value)}
+                      step="0.01"
+                      min="0"
+                      className="input-field amount-input"
+                    />
+                    <select
+                      value={newRetentionUnit}
+                      onChange={(e) => setNewRetentionUnit(e.target.value)}
+                      className="unit-select"
+                    >
+                      {AMOUNT_UNITS.map(unit => (
+                        <option key={unit.value} value={unit.value}>{unit.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>
+                    <FaPlus /> Add
+                  </button>
+                </div>
+              </form>
+            )}
             
             <div className="table-container">
               <table>
@@ -382,7 +546,7 @@ function TeamPage() {
                     <th>#</th>
                     <th>Player Name</th>
                     <th>Amount</th>
-                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -390,18 +554,80 @@ function TeamPage() {
                     <tr key={retention.id || index}>
                       <td>{index + 1}</td>
                       <td>
-                        <div className="player-name">
-                          <GiCricketBat className="player-icon" />
-                          {retention.player_name}
-                        </div>
+                        {editingRetention === retention.id ? (
+                          <input
+                            type="text"
+                            value={editRetentionName}
+                            onChange={(e) => setEditRetentionName(e.target.value)}
+                            className="edit-input"
+                          />
+                        ) : (
+                          <div className="player-name">
+                            <GiCricketBat className="player-icon" />
+                            {retention.player_name}
+                          </div>
+                        )}
                       </td>
                       <td className="amount-cell">
-                        <span className="amount-value">{retention.amount} Cr</span>
+                        {editingRetention === retention.id ? (
+                          <div className="edit-amount-group">
+                            <input
+                              type="number"
+                              value={editRetentionAmount}
+                              onChange={(e) => setEditRetentionAmount(e.target.value)}
+                              step="0.01"
+                              min="0"
+                              className="edit-input amount-edit"
+                            />
+                            <select
+                              value={editRetentionUnit}
+                              onChange={(e) => setEditRetentionUnit(e.target.value)}
+                              className="edit-unit-select"
+                            >
+                              {AMOUNT_UNITS.map(unit => (
+                                <option key={unit.value} value={unit.value}>{unit.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : (
+                          <span className="amount-value">{retention.amount} Cr</span>
+                        )}
                       </td>
-                      <td>
-                        <span className="status-badge retained">
-                          <FaLock /> Retained
-                        </span>
+                      <td className="actions-cell">
+                        {editingRetention === retention.id ? (
+                          <div className="action-buttons">
+                            <button 
+                              className="btn btn-sm btn-success"
+                              onClick={() => handleSaveRetentionEdit(retention.id)}
+                              disabled={submitting}
+                            >
+                              <FaSave />
+                            </button>
+                            <button 
+                              className="btn btn-sm btn-secondary"
+                              onClick={handleCancelRetentionEdit}
+                            >
+                              <FaTimes />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="action-buttons">
+                            <button 
+                              className="btn btn-sm btn-edit"
+                              onClick={() => handleEditRetentionClick(retention)}
+                              title="Edit"
+                            >
+                              <FaEdit />
+                            </button>
+                            <button 
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleDeleteRetention(retention.id, retention.player_name, retention.amount)}
+                              title="Delete"
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -70,6 +70,16 @@ class BidResponse(BaseModel):
     bid: Optional[Bid] = None
     remaining_purse: Optional[float] = None
 
+class RetentionUpdate(BaseModel):
+    player_name: str
+    amount: float
+
+class RetentionResponse(BaseModel):
+    success: bool
+    message: str
+    retention: Optional[Retention] = None
+    remaining_purse: Optional[float] = None
+
 class ErrorResponse(BaseModel):
     success: bool = False
     message: str

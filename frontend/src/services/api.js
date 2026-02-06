@@ -41,6 +41,22 @@ export const updateBid = async (bidId, bidData) => {
   return response.data;
 };
 
+// Retentions API
+export const addRetention = async (retentionData) => {
+  const response = await api.post('/api/retentions', retentionData);
+  return response.data;
+};
+
+export const updateRetention = async (retentionId, retentionData) => {
+  const response = await api.put(`/api/retentions/${retentionId}`, retentionData);
+  return response.data;
+};
+
+export const deleteRetention = async (retentionId) => {
+  const response = await api.delete(`/api/retentions/${retentionId}`);
+  return response.data;
+};
+
 // Stats API
 export const getAuctionStats = async () => {
   const response = await api.get('/api/stats');
