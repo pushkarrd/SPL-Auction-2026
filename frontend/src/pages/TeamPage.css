@@ -702,42 +702,84 @@ tfoot td {
 }
 
 .add-retention-form {
-  background: var(--bg-card);
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  background: var(--bg-secondary);
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
   border: 1px solid var(--border);
 }
 
 .retention-form-row {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .retention-form-row .input-field {
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
   flex: 1;
-  min-width: 120px;
+  min-width: 150px;
+}
+
+.retention-form-row .input-field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
+.retention-form-row .input-field::placeholder {
+  color: var(--text-muted);
 }
 
 .retention-form-row .amount-input-group {
   display: flex;
   gap: 0.5rem;
   flex: 1;
-  min-width: 150px;
+  min-width: 180px;
 }
 
 .retention-form-row .amount-input {
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
   flex: 1;
 }
 
+.retention-form-row .amount-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+}
+
 .retention-form-row .unit-select {
-  width: 90px;
+  padding: 0.875rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  min-width: 100px;
+  cursor: pointer;
 }
 
 .retention-form-row .btn {
+  padding: 0.875rem 1.5rem;
   white-space: nowrap;
+  font-weight: 600;
 }
 
 /* Edit styles for retention */
@@ -747,17 +789,35 @@ tfoot td {
   align-items: center;
 }
 
+.edit-input {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+}
+
 .edit-input.amount-edit {
   width: 80px;
 }
 
 .edit-unit-select {
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.35rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  border: 2px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
 }
 
 .actions-cell {
@@ -806,5 +866,11 @@ tfoot td {
   .retention-form-row .input-field,
   .retention-form-row .amount-input-group {
     width: 100%;
+    min-width: auto;
+  }
+  
+  .retention-form-row .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
