@@ -1,0 +1,193 @@
+.team-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.team-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--team-gradient);
+}
+
+.team-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--team-primary);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(var(--team-primary), 0.2);
+}
+
+.team-card-header {
+  background: var(--team-gradient);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-logo {
+  font-size: 3rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.team-code {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+}
+
+.team-card-body {
+  padding: 1.5rem;
+}
+
+.team-name {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.team-captain {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.captain-icon {
+  color: var(--accent);
+}
+
+.team-captain strong {
+  color: var(--text-primary);
+}
+
+.team-purse {
+  background: var(--bg-dark);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid var(--border);
+}
+
+.purse-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.purse-icon {
+  color: var(--accent);
+}
+
+.purse-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.purse-amount .amount {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+}
+
+.purse-amount .currency {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.purse-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.purse-bar-fill {
+  height: 100%;
+  background: var(--gradient-gold);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.purse-info {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.team-card-footer {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.view-team-btn {
+  width: 100%;
+  padding: 1rem;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.view-team-btn:hover {
+  background: var(--team-gradient);
+  border-color: transparent;
+  transform: scale(1.02);
+}
+
+.view-team-btn .arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.view-team-btn:hover .arrow-icon {
+  transform: translateX(5px);
+}
+
+@media (max-width: 480px) {
+  .team-card-header {
+    padding: 1rem;
+  }
+  
+  .team-logo {
+    font-size: 2.5rem;
+  }
+  
+  .team-code {
+    font-size: 1.5rem;
+  }
+  
+  .purse-amount .amount {
+    font-size: 2rem;
+  }
+}
