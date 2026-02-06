@@ -358,6 +358,11 @@ function HomePage() {
           </ul>
         </div>
       </section>
+
+      {/* Footer Credits */}
+      <footer className="footer-credits">
+        <p>© 2026 Pushkar R Deshpande. All Rights Reserved.</p>
+      </footer>
     </div>
   );
 }

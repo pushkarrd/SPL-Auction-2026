@@ -519,3 +519,24 @@
     padding: 0.875rem 1.5rem;
   }
 }
+
+/* Footer Credits */
+.footer-credits {
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  border-radius: 12px;
+}
+
+.footer-credits p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-credits p::before {
+  content: '🏏 ';
+}
