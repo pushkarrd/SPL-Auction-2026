@@ -125,9 +125,6 @@ function HomePage() {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
-          <div className="hero-logo">
-            <img src="/spl-logo.png" alt="SPL 2026 Logo" />
-          </div>
           <div className="hero-badge">
             <GiTrophyCup />
             <span>Season 2</span>
@@ -140,6 +137,9 @@ function HomePage() {
             Welcome to the official SPL 2026 Season-2 Auction System. 
             Track team purses, manage bids, and watch the action unfold in real-time!
           </p>
+        </div>
+        <div className="hero-logo">
+          <img src="/spl-logo.png" alt="SPL 2026 Logo" />
         </div>
         <div className="hero-decoration">
           <div className="floating-ball ball-1">🏏</div>
