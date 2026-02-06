@@ -125,6 +125,9 @@ function HomePage() {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
+          <div className="hero-logo">
+            <img src="/spl-logo.png" alt="SPL 2026 Logo" />
+          </div>
           <div className="hero-badge">
             <GiTrophyCup />
             <span>Season 2</span>
