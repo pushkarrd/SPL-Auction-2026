@@ -73,6 +73,40 @@
   letter-spacing: 3px;
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mode-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.fast-mode {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.cloud-mode {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.mode-icon {
+  font-size: 0.85rem;
+}
+
 .header-badge {
   display: flex;
   align-items: center;
@@ -89,6 +123,25 @@
 .trophy-icon {
   font-size: 1.2rem;
   color: var(--accent);
+}
+
+.refresh-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(180deg);
 }
 
 @media (max-width: 768px) {
@@ -112,9 +165,18 @@
   .logo-subtitle {
     font-size: 0.7rem;
   }
+
+  .header-controls {
+    gap: 0.5rem;
+  }
   
   .header-badge {
     padding: 0.4rem 0.75rem;
     font-size: 0.75rem;
+  }
+
+  .mode-badge {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.65rem;
   }
 }
