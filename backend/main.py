@@ -60,6 +60,13 @@ async def initialize_data():
         
         print("Database initialized successfully!")
     else:
+        # Keep team display names in sync with the current release without
+        # changing purse balances, bids, or retention records in an existing DB.
+        for team in TEAMS_DATA:
+            await db.teams.update_one(
+                {"team_code": team["team_code"]},
+                {"$set": {"team_name": team["team_name"]}},
+            )
         print("Database already initialized.")
 
 # ============== API ENDPOINTS ==============
