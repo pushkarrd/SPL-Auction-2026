@@ -30,10 +30,10 @@ function Header() {
           </div>
           <div className="logo-text">
             <span className="logo-title">SPL 2026</span>
-            <span className="logo-subtitle">Season 2 • Auction</span>
+            <span className="logo-subtitle">Season 3 • Auction</span>
           </div>
         </Link>
-        
+
         <div className="header-controls">
           <div className={`mode-badge ${isFallback ? 'fast-mode' : 'cloud-mode'}`} title={isFallback ? 'Operating in Fast Standalone Local Mode' : 'Connected to Cloud Backend'}>
             {isFallback ? <FaBolt className="mode-icon" /> : <FaGlobe className="mode-icon" />}

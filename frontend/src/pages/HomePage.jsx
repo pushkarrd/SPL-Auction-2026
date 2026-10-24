@@ -18,7 +18,7 @@ function HomePage() {
   const [teams, setTeams] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   // Quick Bid form state
   const [playerName, setPlayerName] = useState('');
   const [playerRole, setPlayerRole] = useState('Batsman');
@@ -56,27 +56,27 @@ function HomePage() {
 
   const handleQuickBid = async (e) => {
     e.preventDefault();
-    
+
     if (!playerName.trim()) {
       toast.error('Please enter player name');
       return;
     }
-    
+
     if (!selectedTeam) {
       toast.error('Please select a team');
       return;
     }
-    
+
     const inputAmount = parseFloat(bidAmount);
     if (isNaN(inputAmount) || inputAmount <= 0) {
       toast.error('Please enter a valid bid amount');
       return;
     }
-    
+
     // Convert amount to Cr based on selected unit
     const unitConfig = AMOUNT_UNITS.find(u => u.value === amountUnit);
     const amountInCr = inputAmount * unitConfig.multiplier;
-    
+
     const teamPurse = getSelectedTeamPurse();
     if (amountInCr > teamPurse) {
       toast.error(`Insufficient purse! ${selectedTeam} only has ${teamPurse.toFixed(2)} Cr available`);
@@ -91,16 +91,16 @@ function HomePage() {
         bid_amount: amountInCr,
         player_role: playerRole
       });
-      
+
       toast.success(`${playerName} added to ${selectedTeam} for ${amountInCr.toFixed(2)} Cr!`);
-      
+
       // Reset form
       setPlayerName('');
       setPlayerRole('Batsman');
       setSelectedTeam('');
       setBidAmount('');
       setAmountUnit('cr');
-      
+
       // Refresh data to update team cards
       fetchData();
     } catch (error) {
@@ -127,14 +127,14 @@ function HomePage() {
         <div className="hero-content">
           <div className="hero-badge">
             <GiTrophyCup />
-            <span>Season 2</span>
+            <span>Season 3</span>
           </div>
           <h1 className="hero-title">
             SPL 2026
             <span className="hero-subtitle">Player Auction</span>
           </h1>
           <p className="hero-description">
-            Welcome to the official SPL 2026 Season-2 Auction System. 
+            Welcome to the official SPL 2026 Season-3 Auction System.
             Track team purses, manage bids, and watch the action unfold in real-time!
           </p>
         </div>
@@ -201,7 +201,7 @@ function HomePage() {
           <h2>Quick Bid</h2>
           <p>Add a player to any team directly from here</p>
         </div>
-        
+
         <form className="quick-bid-form" onSubmit={handleQuickBid}>
           <div className="quick-bid-grid">
             {/* Player Name */}
@@ -217,7 +217,7 @@ function HomePage() {
                 disabled={submitting}
               />
             </div>
-            
+
             {/* Role Selection */}
             <div className="input-group">
               <label>
@@ -234,7 +234,7 @@ function HomePage() {
                 ))}
               </select>
             </div>
-            
+
             {/* Team Selection */}
             <div className="input-group">
               <label>
@@ -254,7 +254,7 @@ function HomePage() {
                 ))}
               </select>
             </div>
-            
+
             {/* Bid Amount */}
             <div className="input-group">
               <label>
@@ -294,10 +294,10 @@ function HomePage() {
               )}
             </div>
           </div>
-          
+
           {/* Submit Button */}
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn btn-primary quick-bid-btn"
             disabled={submitting || !playerName || !selectedTeam || !bidAmount}
           >
@@ -323,11 +323,11 @@ function HomePage() {
           <h2>Participating Teams</h2>
           <p>Select a team to view details and manage bids</p>
         </div>
-        
+
         <div className="teams-grid">
           {teams.map((team, index) => (
-            <div 
-              key={team.team_code} 
+            <div
+              key={team.team_code}
               className="team-card-wrapper animate-fadeIn"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
