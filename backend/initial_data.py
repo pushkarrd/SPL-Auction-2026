@@ -3,28 +3,28 @@
 TEAMS_DATA = [
     {
         "team_code": "VK",
-        "team_name": "Virat Kohli",
+        "team_name": "Balindra Bulls",
         "captain_name": "Shrivatsa",
         "initial_purse": 100.0,
         "remaining_purse": 100.0
     },
     {
         "team_code": "MS",
-        "team_name": "MS Dhoni",
+        "team_name": "Golden Lions",
         "captain_name": "Shreekar",
         "initial_purse": 100.0,
         "remaining_purse": 100.0
     },
     {
         "team_code": "RS",
-        "team_name": "Rohit Sharma",
+        "team_name": "Eagle Warriors",
         "captain_name": "Sujith",
         "initial_purse": 100.0,
         "remaining_purse": 100.0
     },
     {
         "team_code": "KL",
-        "team_name": "KL Rahul",
+        "team_name": "Royal Mavericks",
         "captain_name": "Samarth",
         "initial_purse": 100.0,
         "remaining_purse": 100.0

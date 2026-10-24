@@ -18,10 +18,17 @@ const teamColors = {
 };
 
 const teamLogos = {
-  VK: '👑',
+  BB: '👑',
   MS: '🦁',
   RS: '🦅',
   KL: '🔥',
+};
+
+const teamShortcuts = {
+  VK: 'BB',
+  MS: 'GL',
+  RS: 'EW',
+  KL: 'RM',
 };
 
 const PLAYER_ROLES = ['Batsman', 'Bowler', 'All-Rounder', 'Keeper'];
@@ -355,7 +362,7 @@ function TeamPage() {
           <div className="team-info">
             <div className="team-logo-large">{logo}</div>
             <div className="team-details">
-              <span className="team-badge">{teamCode?.toUpperCase()}</span>
+              <span className="team-badge">{teamShortcuts[teamCode?.toUpperCase()] || teamCode?.toUpperCase()}</span>
               <h1 className="team-name-large">{team.team_name}</h1>
               <div className="team-captain-info">
                 <FaUserTie />

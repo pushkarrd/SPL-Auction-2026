@@ -16,6 +16,13 @@ const teamLogos = {
   KL: '🔥',
 };
 
+const teamShortcuts = {
+  VK: 'BB',
+  MS: 'GL',
+  RS: 'EW',
+  KL: 'RM',
+};
+
 function TeamCard({ team }) {
   const navigate = useNavigate();
   const colors = teamColors[team.team_code] || teamColors.VK;
@@ -31,7 +38,7 @@ function TeamCard({ team }) {
     >
       <div className="team-card-header" style={{ background: colors.gradient }}>
         <span className="team-logo">{logo}</span>
-        <div className="team-badge">{team.team_code}</div>
+        <div className="team-badge">{teamShortcuts[team.team_code] || team.team_code}</div>
       </div>
       
       <div className="team-card-body">
